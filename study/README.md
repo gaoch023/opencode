@@ -1,134 +1,86 @@
-# OpenCode 源码学习：从 v1.2.24 读懂最新 V1 与 V2
+# OpenCode 源码学习：v1.2.24 → V1 1.18.35 → V2 2.1.3
 
-这组笔记为“先扎实读 v1.2.24，再按专题学习新架构”而写。阅读时把旧版源码留在眼前，用对照文档理解后来解决了什么问题，不需要先通读新版的整个仓库。
+**2026-10-22 已按远端 dev 更新结论：当前 V2 的 `subagent` 与 `shell` 都支持后台执行，而且已默认注册。** 此前“V2 task 未移植”“后台 shell 尚未接入”只适用于 2026-10-08 的旧快照，不能描述当前代码。
 
-## 先固定比较对象
+本学习分支的应用源码仍保持 v1.2.24，只增加学习文档。你可以集中学习这份较易跟读的实现，再按专题理解新版。
 
-| 简称 | 比较对象 | 源码锚点 | 这里的含义 |
-| --- | --- | --- | --- |
-| 基线 | `release: v1.2.24` | `c6262f9d4002d86a1f1795c306aa329d45361d12`，2026-03-09 | 本学习分支的源码基线；包版本 1.2.24 |
-| 最新 V1 | 当前仓库 `origin/dev` 中的传统执行链 | `388406238bd5ca15564a762840a2362c3a45bd9c`，2026-10-08 | 包版本 1.18.35；仍有 `SessionPrompt → SessionProcessor → LLM`，实现已大量 Effect 化 |
-| V2 | 同一个 `dev` 提交中的新 core/protocol/server 执行链 | 同上 | `SessionV2 → SessionExecution → SessionRunner`；是架构代际，不代表已发布一个 2.x 产品版本 |
+## 固定版本，避免混用
 
-“最新”仅指本次核查的这个仓库快照，不声称它是阅读当天上游的最新发行版。远端检查仅暴露 `dev`，没有另一个现成的学习分支或 V2 分支；因此从 v1.2.24 发布提交建立本地 `v1.2.24-study` 分支。全部比较都引用完整 SHA，之后 `dev` 更新不会改变本文的证据。
+| 对象 | 固定提交 | 含义 |
+| --- | --- | --- |
+| 学习基线 A | `c6262f9d4002d86a1f1795c306aa329d45361d12` | 2026-03-09，release v1.2.24 |
+| V1 参考 B | `388406238bd5ca15564a762840a2362c3a45bd9c` | 2026-10-08，V1 包版本 1.18.35；旧专题 02～06 的取证快照 |
+| 推广前 V1 主线末端 | `055d95bb7e278c94baf06235a52cac79dd13ba67` | V2 推广提交的第一父提交；V1 包版本仍为 1.18.35 |
+| **当前 V2 N** | **`62c9002819d06dd48b673a1f84e94ce3e51e50e0`** | **2026-10-22，根包版本 2.1.3，Bun 1.4.4** |
 
-本分支的应用源码保持 v1.2.24，只新增 `study/` 文档。源码链接指向同仓库的固定提交；新版文件在旧版学习分支中不存在时，点击链接即可阅读，或用 `git show <SHA>:<path>` 离线查看。
+历史分界是 [5caf1f9f6f · chore: promote v2 to dev](https://github.com/gaoch023/opencode/commit/5caf1f9f6f5f30e13fc50a788ad953d97ae3748f)，日期 2026-10-10。旧快照早于推广，当前快照晚于它。部分 V2 功能早已在侧支开发，不能只看源码提交日期，就说这些功能都是推广之后才开发出来的。
+
+本次确认仓库不是 shallow checkout，未启用 sparse checkout 或 partial clone；远端暴露 dev。问题根因是此前没有刷新推广前快照，不是当前仓库缺几个源码文件。拉取后本地 dev 与远端的 N 提交一致。
+
+B 到推广前 V1 末端的相关源码变化仅涉及两个 Copilot 适配文件；旧文中的 loop/task/shell 专题仍可作为 V1 1.18.35 学习材料。“推广前末端”不代表另有已验证的 1.x 维护分支或发行标签。
 
 ## 阅读顺序
 
-| 文档 | 你要回答的问题 |
+| 文档 | 范围与用途 |
 | --- | --- |
-| [01 · v1.2.24 阅读地图](01-v1.2.24-reading-map.md) | 一次用户输入如何经过 loop、LLM、工具，变成可显示且可恢复的对话记录？ |
-| [02 · Agent loop 与模型调用](02-agent-loop.md) | 谁控制下一轮？工具何时启动？重试、压缩、停止与系统上下文怎么变？ |
-| [03 · Session、事件与并发状态](03-session-state.md) | 会话记录与执行状态如何分离？steer/queue、取消、重连和进程重启分别意味着什么？ |
-| [04 · 子 agent 与工具调度](04-subagents-tools.md) | task 是新会话还是新进程？同步子任务与后台子任务怎么回传结果？V2 接上了多少？ |
-| [05 · 前后台执行与进程模型](05-process-background.md) | Worker、Fiber、shell 子进程、PTY、BackgroundJob 到底分别管理什么？ |
-| [06 · 入口、技术栈与迁移边界](06-entry-migration.md) | 为什么仓库里有三种“v2”？CLI/API 实际走哪条链？兼容桥接是否会双跑模型？ |
+| [01 · v1.2.24 阅读地图](01-v1.2.24-reading-map.md) | 只讲基线；先走通输入、loop、LLM、工具和存储 |
+| **[07 · 当前 V2 的子 agent 与后台工具](07-current-v2.md)** | **以 N 为准：subagent、shell 前后台、Job、完成回注、管理 API 与重启恢复** |
+| **[08 · 当前 V2 的 Session 与 loop](08-current-session.md)** | **以 N 为准：新 inbox、step、重试、系统上下文、execution claim 和启动恢复** |
+| [02 · 历史 loop 对照](02-agent-loop.md) | A 与 B；其中 V2 是推广前的重构切片 |
+| [03 · 历史 Session 对照](03-session-state.md) | A 与 B；旧 session_input、精确 payload 重试不能直接套到 N |
+| [04 · 历史子 agent 与工具](04-subagents-tools.md) | A 与 B 的 V1 task 演进；旧 V2 缺失结论只作历史 |
+| [05 · 历史进程与后台对照](05-process-background.md) | Fiber/Worker/OS 进程/PTY 区别；当前 Job 恢复见 07 |
+| [06 · 历史入口与迁移边界](06-entry-migration.md) | B 当时的 V1/V2 并存入口；当前默认入口已改变 |
 
-建议先按 01 走通一次完整调用链，再按自己卡住的问题读 02～06。每篇均比较三层；不要直接从 V2 的服务装配开始学基础 agent 行为。
+02～06 仍保留固定旧提交的源码证据，用于理解重构过程；每篇顶部都标明历史范围。**判断当前功能是否存在，应以 07、08 为准。**
 
-## 先掌握这张对照表
+## 当前能力矩阵
 
-| 主题 | v1.2.24 | 最新 V1 | V2 当前实现 |
+| 能力 | v1.2.24 | V1 1.18.35 参考实现 | 当前 V2 2.1.3 |
 | --- | --- | --- | --- |
-| loop 所属 | `SessionPrompt.loop` 的 `while (true)` | 仍由 `SessionPrompt.runLoop` 编排，但进入 Effect 服务与运行状态机 | 独立 `SessionRunner`；每个 provider turn 显式调用一次 `llm.stream` |
-| 同一会话并发 | Instance 内 `AbortController + callbacks` | `SessionRunState` / `Runner` 的 Fiber、Deferred 与状态机 | process-global coordinator 按 Session ID 串行、不同 Session 并发 |
-| 输入何时进入上下文 | 先写 user message，再运行或加入正在运行的 loop | 仍以 V1 message/part 路径为中心 | 先 durable admission inbox；在安全边界 promote，才成为模型可见输入 |
-| 会话数据 | SQLite session/message/part + Bus 更新通知 | 同步事件与投影基础设施已增加，不能再按“只有内存 Bus”理解 | EventV2 持久事件 + 投影；durable seq 支持 replay/tail |
-| 子 agent | TaskTool 创建或复用 child Session，等待其 loop | 保留同步模式；增加受实验开关控制的后台 task | 已有新 Agent 定义与通用后台服务，但原生 task 内置工具尚未接入 |
-| bash 前后台 | 普通 bash 工具等待 OS 子进程完成；`detached` 不等于工具后台返回 | shell 仍等待命令结束；后台能力增加在 task/subagent，不能类推给 bash | bash 前台执行已接入；把 BackgroundJob 暴露给 V2 bash/agent 的完整后台协议仍是后续工作 |
-| 工具并行 | SDK execute 回调与异步工具执行；不能把 await 误读成整个系统单线程阻塞 | Effect 管理工具作用域，兼容 SDK/native 两个 LLM 后端 | 先记录完整调用再启动 structured child Fiber；流结束后等所有已启动工具结算，再续轮 |
-| 取消 | AbortSignal 协作取消，bash 额外杀进程树 | Fiber interrupt + scoped cleanup；后台任务有独立生命周期 | coordinator 中断本进程活动 drain；保留 inbox；不等于分布式取消 |
-| 进程重启 | 会话记录保留，活跃 Promise/abort 状态消失 | 会话与事件保留；BackgroundJob registry 和活动 Fiber 是内存状态，不会自动恢复 | durable 记录可回放，但自动恢复未知 provider/工具副作用并未因此完成 |
-| 压缩 | V1 compaction part、专用摘要调用与历史裁剪 | 原链路继续演进 | runner 自动压缩已有；公共 `sessions.compact()` 尚不可用，不能混为一谈 |
-| 默认入口 | 根目录 `bun dev` → `packages/opencode` | 根目录仍走 `packages/opencode` 的 V1 prompt API | `/api/session/...` 和新 CLI/core 是另一条入口；并非切到 dev 就全部走 V2 |
+| 普通 shell 工具 | `bash`，等待结果 | `bash`，Effect scoped shell | **`shell`，支持前台与后台** |
+| 子 agent 委派 | `task`，子 Session | `task`，子 Session | **`subagent`，子 Session，已默认注册** |
+| 子 agent 后台启动 | 无专用后台参数 | `background`，需实验开关 | **`background:true`，立即返回并注册完成通知** |
+| shell 后台启动 | 无受管理后台工具协议 | 无受管理后台工具协议 | **`background:true`，返回 shellID、输出文件与 running** |
+| 前台转后台 | 无统一转换 | task 有实验入口 | **Session background 操作，可转移当前可后台化工具** |
+| 后台结果回到会话 | 无通用机制 | task synthetic prompt 回注 | **shell/subagent 均有 synthetic 完成通知** |
+| 后台状态 | 无统一 registry | 进程内 BackgroundJob | **Job 活跃 registry + 可恢复工作的持久通知标记** |
+| 重启时后台 shell | 无相同协议 | 不恢复 registry | **running shell 报 cancelled 并补通知，不重跑命令** |
+| 重启时后台子 agent | 无相同协议 | 不自动恢复 | **身份及恢复预算检查后可继续子会话并补通知** |
+| 同一 Session 并发 | AbortController + callbacks | Effect Runner / Deferred | **process-global coordinator，Location-scoped runner** |
+| 输入接收 | 先写可见 user message | 同上 | **session_inbox 先入队，在安全 step 边界交付** |
+| 模型步重试 | processor 重试 | V1 retry policy | **step 重试与 RetryScheduled，见 08** |
+| 公开 compact/shell/skill/wait | V1 对应能力 | V1 对应能力 | **已有实现；旧 unavailable 结论失效** |
+| 默认开发入口 | packages/opencode | packages/opencode | **packages/cli；旧 packages/opencode 源码包已移除** |
 
-这张表是导航。细节、前提、实验开关和精确源码证据见各专题，尤其不要把“共享服务已存在”推断成“所有 V2 功能已接入”。
+这里的“已实现”来自执行链、默认注册与现有测试的静态核对，不代表本轮运行过模型请求或完整测试套件。权限、agent mode、深度等条件仍会限制实际调用。
 
-### “后台执行”和“V2 子 agent”究竟指什么
-
-不能将上表概括成“OpenCode 没有后台执行或子 agent”。按本次固定快照，能力分别是：
-
-| 具体能力 | v1.2.24 | 最新 V1 | 原生 V2 默认工具链 |
-| --- | --- | --- | --- |
-| 模型调用 bash 执行命令并等待结果 | 有 | 有 | 有 |
-| 父模型通过 task 委派子 agent，并等待子会话结果 | 有 | 有 | 内置 task 尚未移植 |
-| task 立即返回，子 agent 在后台继续，完成后通知父会话 | 无专用后台参数 | 有，需启用实验开关 | 尚未接入 |
-| bash 立即返回受管理的 job ID，之后可观察、等待、取消并接收完成结果 | 无此工具协议 | 无此工具协议 | 尚未接入 |
-
-shell 命令本身可以用 `&` 等机制启动系统后台进程。这是 OS/shell 的行为，不能据工具缺少 `background` 参数就说系统不支持后台进程；但它也不会自动得到上述 job 生命周期和完成通知。是否能存活还取决于输出管道、终端、进程组以及宿主清理行为。
-
-V2 已有 `general`、`explore` 等 subagent 身份定义；尚未完成的是默认内置 `task` 将“父模型委派 → 子 Session 执行 → 结果回传/取消”串起来的能力。应用也能通过公开会话和工具注册接口自行组合，不应把“默认内置工具未接入”理解成“框架无法定义或运行别的 agent”。这个 V2 是与最新 V1 并存的重构实现，当前能力尚未完全齐平；具体入口和源码证据见 [04](04-subagents-tools.md) 与 [06](06-entry-migration.md)。
-
-具体来说，[V2 创建 Session 的 API](https://github.com/gaoch023/opencode/blob/388406238bd5ca15564a762840a2362c3a45bd9c/packages/protocol/src/groups/session.ts#L129) 允许显式指定 agent；[Agent.select](https://github.com/gaoch023/opencode/blob/388406238bd5ca15564a762840a2362c3a45bd9c/packages/core/src/agent.ts#L94) 也允许选择 explore/general。因此“以 explore 身份运行一个独立会话”与“父模型通过 task 自动派生子任务”是两个不同层次，缺的是后者的默认接入。
-
-## 用同一个例子比较三条链
-
-假设用户说：“读项目，再让 explore 找出登录入口，执行测试。”
-
-### v1.2.24
+## 你最关心的两条新链
 
 ```text
-用户输入
-  → prompt 写 user message/parts
-  → loop 读取会话历史，选 agent/model，构建工具
-  → LLM.stream / SDK streamText
-  → 模型发 read/task/bash tool call
-  → task 创建 child Session，再调用一次 SessionPrompt.prompt
-      → 子会话有自己的 loop，父 task 等它返回
-  → bash 创建 OS shell 子进程，等待结束并收集输出
-  → processor 写 tool result 和消息状态
-  → loop 重读历史，决定续轮或结束
+父模型 → subagent(background=true)
+  → 校验 agent / 权限 / 深度，创建或续用 child Session
+  → child.prompt → SubagentJob.start → Session.resume
+  → 父工具立即返回 running + sessionID
+  → 子会话完成 → synthetic 完成/失败结果送入父会话
 ```
-
-### 最新 V1
-
-外部行为仍能对上这条链，但 await/AbortController 的管理大量迁入 Effect 服务与 Fiber 生命周期。task 的后台模式可以先返回任务信息，让父 loop 继续；后台完成后用 synthetic prompt 回注父会话。shell 工具本身仍等待命令退出，不能把 task 的后台参数类推给 bash。启用条件和取消规则见 04、05。
-
-### V2
 
 ```text
-prompt admission
-  → 持久 inbox（收到请求 ≠ 已写入模型历史）
-  → advisory wake / 按 Session 排他执行
-  → 获取当前 Location 的服务
-  → 首次先初始化完整 Context Epoch，再 promote 输入
-  → 后续安全边界 promote 输入、reconcile 上下文并准备历史
-  → 一次 llm.stream
-  → 完整 local tool-call 持久化后立即启动其 Fiber
-  → 等 provider stream 结束，再等已启动工具结果持久化
-  → 重新读取投影历史并判断续轮
+父模型 → shell(background=true)
+  → Shell.create 启动真实 OS shell 进程，输出持续写文件
+  → Job.start + background，持久化可恢复通知元数据
+  → 父工具立即返回 running + shellID + 输出文件
+  → 命令完成 → synthetic 输出/退出状态送入所属 Session
 ```
 
-这个 V2 例子里的 `read`、`bash` 能沿原生内置工具链理解，`task` 则不能直接照搬：当前原生 registry 没有 task 的实现。学习 V2 子 agent 时，应先理解它需要接到 Session/BackgroundJob/权限/完成通知的哪些边界，再把它与“当前已经可用”分开。
+这已经超出 shell 命令里手写 `&`：它有 OpenCode 自己的执行身份、观察、前后台转换和通知协议。shell 还提供 HTTP list/create/get/output/remove 接口；应用 API 与模型直接可用的工具目录仍要分开理解。
 
-## 把这些执行单位分清楚
+## 仍要分清的边界
 
-| 名称 | 它是什么 | 它本身不保证什么 |
-| --- | --- | --- |
-| Agent | 提示词、模型、工具权限、步数等配置身份 | 不自动创建进程或独立文件系统 |
-| Session | 会话身份、历史、上下文选择及相关持久记录 | 不等于正在运行的 loop |
-| Provider turn | 一次模型流请求及其本轮工具处理 | 不等于一整段用户任务或整个 Session |
-| Drain / run | 本进程这次负责推进会话的活动执行链 | 不自动获得跨机器执行所有权或崩溃恢复能力 |
-| Tool call | 模型请求一次工具能力 | 不一定创建 OS 进程；read 和 bash 的资源类型不同 |
-| Subagent | 一个 agent 身份下的 child Session 执行 | 不等于新线程、新容器或新 OS 进程 |
-| Fiber | Effect 的协作执行与取消单位 | 不等于 OS 线程，取消也不是强行回滚外部副作用 |
-| Worker | Bun/JS Worker 执行环境 | 不等于子 agent，不按 Session 自动一一创建 |
-| OS child process | bash、命令工具、daemon 等启动的系统进程 | `detached` 本身不意味着 tool call 已结束 |
-| PTY | 为交互式进程提供的伪终端与输入输出会话 | 不等于后台 agent 调度器 |
-| BackgroundJob | 管理后台工作、状态、观察、取消等生命周期的进程内服务 | 当前 registry 非持久化；OS 进程或 Fiber 也不因 job ID 而跨重启存活 |
+- Agent 是策略身份；Session 是对话身份；子 agent 通常仍是宿主进程内的异步执行链，不是每个 child 都启动 OS 进程。
+- shell 命令会创建真实 OS 子进程；PTY 是带伪终端的交互进程。shellID、SessionID、Job ID 与 PID 不要混用。
+- 当前已有恢复机制，但不保证所有 OS 进程跨服务器重启存活，也不保证任意外部副作用 exactly-once。
+- 当前父会话取消与后台子任务的关系应看 07，不要直接沿用旧 V1 的递归后代取消规则。
+- 学习基线使用 Bun 1.3.10，N 使用 Bun 1.4.4。此前 Bun 1.3.14 的依赖安装结果不能视为新版本运行验证。
 
-## 边学边验证，不需要同时啃完整个新仓库
-
-1. 在基线上给一次 `read` 调用画出 message/part 的状态变化，再看 02 中 V2 的事件化结算。
-2. 给 `task` 的父 Session、child Session、tool call ID 各写一个值，追踪谁等待谁；再看后台模式为什么需要额外 job ID 与完成通知。
-3. 想象用户在 loop 正运行时再发一句话，分别解释基线 callbacks、最新 V1 状态机、V2 steer/queue 的作用。
-4. 分别取消一次 provider 请求、前台 bash、后台任务，画出取消信号如何传播，哪些副作用不能撤回。
-5. 假设进程在“工具已改文件、结果还未落库”之间崩溃，说明为什么“事件已持久化”不能证明可以安全重跑工具。
-6. 用 06 的入口表确认当前读到的是 V1、V1 native adapter 还是原生 V2，再继续往下追。
-
-## 阅读与验证范围
-
-分析以固定提交的源码为主，已有测试用于核对预期行为；设计文档和 TODO 仅作线索。没有为本次文档调用外部模型、执行有副作用的演示任务，或声称已经运行所有版本的完整测试。文档校验会检查源码引用的提交、路径、行号与内部链接。
-
-本分支使用 v1.2.24 的 `packageManager`（Bun 1.3.10）；此前为 dev 安装的 Bun 1.3.14 和 node_modules 不应被当作基线运行验证结果。仅阅读源码不需要重装依赖。若以后要运行基线，请按它自己的 package.json 与 frozen lockfile 准备依赖，不要沿用 dev 的构建产物判断行为。
+新源码尽量引用完整 SHA。阅读时按链接或 `git show <SHA>:<path>` 查看，避免在 v1.2.24 分支中按新路径查找不存在的文件。

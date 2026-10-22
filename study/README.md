@@ -45,6 +45,23 @@
 
 这张表是导航。细节、前提、实验开关和精确源码证据见各专题，尤其不要把“共享服务已存在”推断成“所有 V2 功能已接入”。
 
+### “后台执行”和“V2 子 agent”究竟指什么
+
+不能将上表概括成“OpenCode 没有后台执行或子 agent”。按本次固定快照，能力分别是：
+
+| 具体能力 | v1.2.24 | 最新 V1 | 原生 V2 默认工具链 |
+| --- | --- | --- | --- |
+| 模型调用 bash 执行命令并等待结果 | 有 | 有 | 有 |
+| 父模型通过 task 委派子 agent，并等待子会话结果 | 有 | 有 | 内置 task 尚未移植 |
+| task 立即返回，子 agent 在后台继续，完成后通知父会话 | 无专用后台参数 | 有，需启用实验开关 | 尚未接入 |
+| bash 立即返回受管理的 job ID，之后可观察、等待、取消并接收完成结果 | 无此工具协议 | 无此工具协议 | 尚未接入 |
+
+shell 命令本身可以用 `&` 等机制启动系统后台进程。这是 OS/shell 的行为，不能据工具缺少 `background` 参数就说系统不支持后台进程；但它也不会自动得到上述 job 生命周期和完成通知。是否能存活还取决于输出管道、终端、进程组以及宿主清理行为。
+
+V2 已有 `general`、`explore` 等 subagent 身份定义；尚未完成的是默认内置 `task` 将“父模型委派 → 子 Session 执行 → 结果回传/取消”串起来的能力。应用也能通过公开会话和工具注册接口自行组合，不应把“默认内置工具未接入”理解成“框架无法定义或运行别的 agent”。这个 V2 是与最新 V1 并存的重构实现，当前能力尚未完全齐平；具体入口和源码证据见 [04](04-subagents-tools.md) 与 [06](06-entry-migration.md)。
+
+具体来说，[V2 创建 Session 的 API](https://github.com/gaoch023/opencode/blob/388406238bd5ca15564a762840a2362c3a45bd9c/packages/protocol/src/groups/session.ts#L129) 允许显式指定 agent；[Agent.select](https://github.com/gaoch023/opencode/blob/388406238bd5ca15564a762840a2362c3a45bd9c/packages/core/src/agent.ts#L94) 也允许选择 explore/general。因此“以 explore 身份运行一个独立会话”与“父模型通过 task 自动派生子任务”是两个不同层次，缺的是后者的默认接入。
+
 ## 用同一个例子比较三条链
 
 假设用户说：“读项目，再让 explore 找出登录入口，执行测试。”

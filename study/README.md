@@ -4,6 +4,13 @@
 
 本学习分支的应用源码仍保持 v1.2.24，只增加学习文档。你可以集中学习这份较易跟读的实现，再按专题理解新版。
 
+## 下载与离线阅读
+
+- [完整离线 ZIP](downloads/opencode-source-study.zip)：包含九篇 Markdown、已渲染的 HTML 阅读版和四张 SVG 流程图。
+- [单文件 HTML 阅读版](downloads/opencode-source-study.html)：下载后直接用浏览器打开。
+
+ZIP 解压后双击 `index.html`。正文、表格、目录和流程图可离线阅读，GitHub 源码外链需要联网。HTML 在 GitHub 文件页不会直接作为网页执行，应先下载；Markdown 文档可以直接在 GitHub 查看渲染结果。
+
 ## 固定版本，避免混用
 
 | 对象 | 固定提交 | 含义 |

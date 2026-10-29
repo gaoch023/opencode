@@ -1,0 +1,570 @@
+{
+  "versions": {
+    "c6262f9d4002d86a1f1795c306aa329d45361d12": "A · v1.2.24",
+    "055d95bb7e278c94baf06235a52cac79dd13ba67": "B · V1 1.18.35",
+    "726cf096396d5014c3b1845e231cc01efe0421ee": "N · V2 2.2.0"
+  },
+  "chapters": [
+    {
+      "file": "00-model-and-reading-guide.md",
+      "prose_hanzi": 1863,
+      "excerpts": []
+    },
+    {
+      "file": "01-v1.2.24.md",
+      "prose_hanzi": 7395,
+      "excerpts": [
+        {
+          "sha": "c6262f9d4002d86a1f1795c306aa329d45361d12",
+          "path": "packages/opencode/src/agent/agent.ts",
+          "first": 24,
+          "last": 45
+        },
+        {
+          "sha": "c6262f9d4002d86a1f1795c306aa329d45361d12",
+          "path": "packages/opencode/src/session/index.ts",
+          "first": 679,
+          "last": 699
+        },
+        {
+          "sha": "c6262f9d4002d86a1f1795c306aa329d45361d12",
+          "path": "packages/opencode/src/session/prompt.ts",
+          "first": 158,
+          "last": 184
+        },
+        {
+          "sha": "c6262f9d4002d86a1f1795c306aa329d45361d12",
+          "path": "packages/opencode/src/session/prompt.ts",
+          "first": 274,
+          "last": 298
+        },
+        {
+          "sha": "c6262f9d4002d86a1f1795c306aa329d45361d12",
+          "path": "packages/opencode/src/session/prompt.ts",
+          "first": 300,
+          "last": 325
+        },
+        {
+          "sha": "c6262f9d4002d86a1f1795c306aa329d45361d12",
+          "path": "packages/opencode/src/session/llm.ts",
+          "first": 199,
+          "last": 224
+        },
+        {
+          "sha": "c6262f9d4002d86a1f1795c306aa329d45361d12",
+          "path": "packages/opencode/src/session/prompt.ts",
+          "first": 783,
+          "last": 805
+        },
+        {
+          "sha": "c6262f9d4002d86a1f1795c306aa329d45361d12",
+          "path": "packages/opencode/src/session/processor.ts",
+          "first": 45,
+          "last": 70
+        },
+        {
+          "sha": "c6262f9d4002d86a1f1795c306aa329d45361d12",
+          "path": "packages/opencode/src/session/processor.ts",
+          "first": 180,
+          "last": 201
+        },
+        {
+          "sha": "c6262f9d4002d86a1f1795c306aa329d45361d12",
+          "path": "packages/opencode/src/session/prompt.ts",
+          "first": 689,
+          "last": 714
+        },
+        {
+          "sha": "c6262f9d4002d86a1f1795c306aa329d45361d12",
+          "path": "packages/opencode/src/tool/task.ts",
+          "first": 66,
+          "last": 99
+        },
+        {
+          "sha": "c6262f9d4002d86a1f1795c306aa329d45361d12",
+          "path": "packages/opencode/src/tool/task.ts",
+          "first": 119,
+          "last": 143
+        },
+        {
+          "sha": "c6262f9d4002d86a1f1795c306aa329d45361d12",
+          "path": "packages/opencode/src/tool/bash.ts",
+          "first": 167,
+          "last": 181
+        },
+        {
+          "sha": "c6262f9d4002d86a1f1795c306aa329d45361d12",
+          "path": "packages/opencode/src/tool/bash.ts",
+          "first": 211,
+          "last": 240
+        },
+        {
+          "sha": "c6262f9d4002d86a1f1795c306aa329d45361d12",
+          "path": "packages/opencode/src/session/compaction.ts",
+          "first": 32,
+          "last": 47
+        },
+        {
+          "sha": "c6262f9d4002d86a1f1795c306aa329d45361d12",
+          "path": "packages/opencode/src/session/processor.ts",
+          "first": 353,
+          "last": 377
+        }
+      ]
+    },
+    {
+      "file": "02-v1-final.md",
+      "prose_hanzi": 7268,
+      "excerpts": [
+        {
+          "sha": "055d95bb7e278c94baf06235a52cac79dd13ba67",
+          "path": "packages/opencode/src/agent/agent.ts",
+          "first": 35,
+          "last": 55
+        },
+        {
+          "sha": "055d95bb7e278c94baf06235a52cac79dd13ba67",
+          "path": "packages/opencode/src/session/prompt.ts",
+          "first": 1052,
+          "last": 1071
+        },
+        {
+          "sha": "055d95bb7e278c94baf06235a52cac79dd13ba67",
+          "path": "packages/opencode/src/session/run-state.ts",
+          "first": 35,
+          "last": 59
+        },
+        {
+          "sha": "055d95bb7e278c94baf06235a52cac79dd13ba67",
+          "path": "packages/opencode/src/effect/runner.ts",
+          "first": 115,
+          "last": 138
+        },
+        {
+          "sha": "055d95bb7e278c94baf06235a52cac79dd13ba67",
+          "path": "packages/opencode/src/session/prompt.ts",
+          "first": 1096,
+          "last": 1116
+        },
+        {
+          "sha": "055d95bb7e278c94baf06235a52cac79dd13ba67",
+          "path": "packages/opencode/src/session/tools.ts",
+          "first": 99,
+          "last": 128
+        },
+        {
+          "sha": "055d95bb7e278c94baf06235a52cac79dd13ba67",
+          "path": "packages/opencode/src/session/processor.ts",
+          "first": 160,
+          "last": 184
+        },
+        {
+          "sha": "055d95bb7e278c94baf06235a52cac79dd13ba67",
+          "path": "packages/opencode/src/session/llm.ts",
+          "first": 357,
+          "last": 378
+        },
+        {
+          "sha": "055d95bb7e278c94baf06235a52cac79dd13ba67",
+          "path": "packages/core/src/event.ts",
+          "first": 316,
+          "last": 349
+        },
+        {
+          "sha": "055d95bb7e278c94baf06235a52cac79dd13ba67",
+          "path": "packages/opencode/src/tool/task.ts",
+          "first": 98,
+          "last": 128
+        },
+        {
+          "sha": "055d95bb7e278c94baf06235a52cac79dd13ba67",
+          "path": "packages/opencode/src/tool/task.ts",
+          "first": 284,
+          "last": 318
+        },
+        {
+          "sha": "055d95bb7e278c94baf06235a52cac79dd13ba67",
+          "path": "packages/opencode/src/tool/task.ts",
+          "first": 227,
+          "last": 253
+        },
+        {
+          "sha": "055d95bb7e278c94baf06235a52cac79dd13ba67",
+          "path": "packages/core/src/background-job.ts",
+          "first": 113,
+          "last": 137
+        },
+        {
+          "sha": "055d95bb7e278c94baf06235a52cac79dd13ba67",
+          "path": "packages/opencode/src/tool/shell.ts",
+          "first": 533,
+          "last": 559
+        },
+        {
+          "sha": "055d95bb7e278c94baf06235a52cac79dd13ba67",
+          "path": "packages/opencode/src/session/retry.ts",
+          "first": 188,
+          "last": 205
+        },
+        {
+          "sha": "055d95bb7e278c94baf06235a52cac79dd13ba67",
+          "path": "packages/opencode/src/session/compaction.ts",
+          "first": 419,
+          "last": 448
+        }
+      ]
+    },
+    {
+      "file": "03-v2-runtime.md",
+      "prose_hanzi": 8623,
+      "excerpts": [
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/execution.ts",
+          "first": 84,
+          "last": 107
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session.ts",
+          "first": 288,
+          "last": 318
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/session.ts",
+          "first": 155,
+          "last": 188
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/inbox.ts",
+          "first": 176,
+          "last": 203
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/bus.ts",
+          "first": 397,
+          "last": 429
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/run-coordinator.ts",
+          "first": 119,
+          "last": 140
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/run-coordinator.ts",
+          "first": 142,
+          "last": 171
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/runner/llm.ts",
+          "first": 184,
+          "last": 200
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/model-request.ts",
+          "first": 99,
+          "last": 118
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/runner/step.ts",
+          "first": 103,
+          "last": 134
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/runner/step.ts",
+          "first": 140,
+          "last": 161
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/model-retry.ts",
+          "first": 22,
+          "last": 40
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/instruction-state.ts",
+          "first": 38,
+          "last": 60
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/compaction.ts",
+          "first": 290,
+          "last": 321
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/bus.ts",
+          "first": 875,
+          "last": 892
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/execution.ts",
+          "first": 73,
+          "last": 83
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/execution/restart.ts",
+          "first": 78,
+          "last": 99
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/execution/restart.ts",
+          "first": 230,
+          "last": 264
+        }
+      ]
+    },
+    {
+      "file": "04-v2-tools-processes.md",
+      "prose_hanzi": 9009,
+      "excerpts": [
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/tool.ts",
+          "first": 249,
+          "last": 274
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/tool/runtime.ts",
+          "first": 29,
+          "last": 60
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/runner/step.ts",
+          "first": 121,
+          "last": 134
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/tool/plugin/subagent.ts",
+          "first": 30,
+          "last": 47
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/tool/plugin/subagent.ts",
+          "first": 123,
+          "last": 157
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/tool/plugin/subagent.ts",
+          "first": 174,
+          "last": 198
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session.ts",
+          "first": 292,
+          "last": 315
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/tool/plugin/subagent.ts",
+          "first": 226,
+          "last": 250
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/subagent-job.ts",
+          "first": 20,
+          "last": 41
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/tool/plugin/shell.ts",
+          "first": 48,
+          "last": 61
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/shell.ts",
+          "first": 302,
+          "last": 331
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/tool/plugin/shell.ts",
+          "first": 239,
+          "last": 267
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/tool/plugin/shell.ts",
+          "first": 165,
+          "last": 186
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/job.ts",
+          "first": 205,
+          "last": 230
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/execution/restart.ts",
+          "first": 196,
+          "last": 225
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/util/src/cross-spawn-spawner.ts",
+          "first": 409,
+          "last": 431
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/persistent-pty/daemon.ts",
+          "first": 229,
+          "last": 245
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/client/src/service-contender.ts",
+          "first": 14,
+          "last": 44
+        }
+      ]
+    },
+    {
+      "file": "05-three-version-comparison.md",
+      "prose_hanzi": 3990,
+      "excerpts": [
+        {
+          "sha": "c6262f9d4002d86a1f1795c306aa329d45361d12",
+          "path": "packages/opencode/src/session/prompt.ts",
+          "first": 158,
+          "last": 184
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/session.ts",
+          "first": 155,
+          "last": 178
+        },
+        {
+          "sha": "c6262f9d4002d86a1f1795c306aa329d45361d12",
+          "path": "packages/opencode/src/session/prompt.ts",
+          "first": 65,
+          "last": 83
+        },
+        {
+          "sha": "055d95bb7e278c94baf06235a52cac79dd13ba67",
+          "path": "packages/opencode/src/effect/runner.ts",
+          "first": 14,
+          "last": 37
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/run-coordinator.ts",
+          "first": 119,
+          "last": 140
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/bus.ts",
+          "first": 200,
+          "last": 210
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/bus.ts",
+          "first": 402,
+          "last": 432
+        }
+      ]
+    },
+    {
+      "file": "06-why-v2.md",
+      "prose_hanzi": 6381,
+      "excerpts": [
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/sdk/src/effect/opencode.ts",
+          "first": 42,
+          "last": 59
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/server/src/workerd.ts",
+          "first": 75,
+          "last": 88
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/plugin/hooks.ts",
+          "first": 69,
+          "last": 84
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/session.ts",
+          "first": 155,
+          "last": 188
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/execution.ts",
+          "first": 109,
+          "last": 134
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/sdk/src/internal/instances.ts",
+          "first": 54,
+          "last": 75
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/ai/src/route/executor.ts",
+          "first": 229,
+          "last": 250
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/core/src/session/instruction-state.ts",
+          "first": 38,
+          "last": 61
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/ai/src/cache-policy.ts",
+          "first": 17,
+          "last": 35
+        },
+        {
+          "sha": "726cf096396d5014c3b1845e231cc01efe0421ee",
+          "path": "packages/server/src/event-feed.ts",
+          "first": 48,
+          "last": 70
+        }
+      ]
+    },
+    {
+      "file": "07-execution-walkthroughs.md",
+      "prose_hanzi": 3117,
+      "excerpts": []
+    },
+    {
+      "file": "08-questions-and-debugging.md",
+      "prose_hanzi": 4196,
+      "excerpts": []
+    }
+  ]
+}
